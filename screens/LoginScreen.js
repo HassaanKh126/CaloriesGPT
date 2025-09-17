@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { KeyboardAvoidingView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import { BURL } from "@env";
 
 const LoginScreen = () => {
     const insets = useSafeAreaInsets();
@@ -35,7 +36,7 @@ const LoginScreen = () => {
         }
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:1000/api/login", {
+            const response = await fetch(`${BURL}/api/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

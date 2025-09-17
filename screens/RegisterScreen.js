@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { KeyboardAvoidingView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import { BURL } from "@env";
 
 const RegisterScreen = () => {
     const insets = useSafeAreaInsets();
@@ -21,16 +22,22 @@ const RegisterScreen = () => {
 
     const handleRegister = async () => {
         if (username.trim() === "" || email.trim() === "" || password.trim() === "") {
-            console.log("All fields are required.");
+            Toast.show({
+                type: 'error',
+                text1: "All fields are required."
+            });
             return;
         }
         if (!isValidEmail(email)) {
-            console.log('invalid email');
+            Toast.show({
+                type: 'error',
+                text1: "Email invalid."
+            })
             return;
         }
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:1000/api/register", {
+            const response = await fetch(`${BURL}/api/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

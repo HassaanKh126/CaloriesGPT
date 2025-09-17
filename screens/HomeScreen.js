@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -7,6 +7,7 @@ import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import LoaderOverlay from "../components/Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+import { BURL } from "@env";
 
 const HomeScreen = () => {
     const insets = useSafeAreaInsets();
@@ -88,7 +89,7 @@ const HomeScreen = () => {
                 name: "image.jpg",
             });
 
-            const response = await fetch("http://localhost:1000/api/analyze-image", {
+            const response = await fetch(`${BURL}/api/analyze-image`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "multipart/form-data",
@@ -113,7 +114,7 @@ const HomeScreen = () => {
         const username = await AsyncStorage.getItem("caloriesgpt_username");
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:1000/api/get-food', {
+            const response = await fetch(`${BURL}/api/get-food`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -127,7 +128,7 @@ const HomeScreen = () => {
         } catch (error) {
             Toast.show({
                 type: 'error',
-                text1: "An error occurred... Please try again."
+                text1: "An error occurred. Please try again."
             });
         } finally {
             setLoading(false);
@@ -137,6 +138,10 @@ const HomeScreen = () => {
     useEffect(() => {
         getFood();
     }, []);
+
+    function truncate(str, maxLength) {
+        return str.length > maxLength ? str.slice(0, maxLength) + "..." : str;
+    }
 
     return (
         <View style={[styles.container, { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 10 }]}>
@@ -155,7 +160,7 @@ const HomeScreen = () => {
                         <Text style={{ fontFamily: "Lexend-Medium", fontSize: 12, color: "#888888" }}>Calories Left:</Text>
                         <Text style={{ fontFamily: "Lexend-SemiBold", fontSize: 32, color: "#101010" }}>1000</Text>
                     </View>
-                    <TouchableOpacity style={{ backgroundColor: "#101010", padding: 10, borderRadius: 10, marginTop: 10, alignItems: "center" }} onPress={toggleDropdown} activeOpacity={0.6}>
+                    <TouchableOpacity style={{ backgroundColor: "#101010", padding: 10, borderRadius: 10, marginTop: 10, alignItems: "center" }} onPress={toggleDropdown} activeOpacity={0.8}>
                         <Text style={{ fontFamily: "Lexend-Medium", color: "#efeee9", fontSize: 16 }}>Add Food</Text>
                     </TouchableOpacity>
                     <Animated.View style={[styles.dropdown, animatedStyle]}>
@@ -175,7 +180,7 @@ const HomeScreen = () => {
                                         <Image source={{ uri: food.food_img_url }} style={{ height: "100%", width: "100%", backgroundColor: "#7c7c7c", borderTopLeftRadius: 20, borderBottomLeftRadius: 20, objectFit: 'cover' }} />
                                     </View>
                                     <View style={{ padding: 10, flex: 1, justifyContent: 'center', maxHeight: 110 }}>
-                                        <Text style={{ fontFamily: "Lexend-SemiBold", fontSize: 15, color: "#101010" }}>{food.food_name}</Text>
+                                        <Text style={{ fontFamily: "Lexend-SemiBold", fontSize: 15, color: "#101010" }}>{truncate(food.food_name, 32)}</Text>
                                         <View style={{ marginVertical: 5 }}>
                                             <Text style={{ fontFamily: "Lexend-Regular", fontSize: 14, color: "#555555" }}>{food.calories} Cal • {food.carbs}g Carbs</Text>
                                             <Text style={{ fontFamily: "Lexend-Regular", fontSize: 14, color: "#555555" }}>{food.fats}g Fats • {food.protein}g Protein</Text>

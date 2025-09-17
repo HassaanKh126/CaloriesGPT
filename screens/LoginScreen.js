@@ -20,16 +20,22 @@ const LoginScreen = () => {
 
     const handleLogin = async () => {
         if (email.trim() === "" || password.trim() === "") {
-            console.log("All fields are required.");
+            Toast.show({
+                type: 'error',
+                text1: 'All fields are required.'
+            });
             return;
         }
         if (!isValidEmail(email)) {
-            console.log('invalid email');
+            Toast.show({
+                type: 'error',
+                text1: 'Email invalid.'
+            });
             return;
         }
         setLoading(true);
         try {
-            const response = await fetch("http://192.168.18.85:1000/api/login", {
+            const response = await fetch("http://localhost:1000/api/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -75,18 +81,18 @@ const LoginScreen = () => {
         <KeyboardAvoidingView style={[styles.container, { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 10 }]} behavior="height">
             <StatusBar hidden />
             <View style={styles.secondContainer}>
-                <Text style={{ fontFamily: "Cardo-Bold", fontSize: 36, color: "#101010" }}>CaloriesGPT</Text>
+                <Text style={{ fontFamily: "Lexend-Medium", fontSize: 36, color: "#101010" }}>CaloriesGPT</Text>
                 <Text style={{ fontFamily: "Lexend-Regular", fontSize: 24, color: "#101010", marginBottom: 20 }}>Login</Text>
                 <View>
-                    <Text style={{ fontFamily: "EBGaramond-Medium", fontSize: 18, marginLeft: 5, marginBottom: 2 }}>Email</Text>
+                    <Text style={{ fontFamily: "Lexend-Regular", fontSize: 14, marginLeft: 5, marginBottom: 2 }}>Email</Text>
                     <TextInput placeholder="example@example.com" placeholderTextColor={"#888888"} style={{ padding: 10, borderWidth: 1.5, borderRadius: 10, borderColor: '#101010', color: "#101010", fontFamily: "Lexend-Regular", fontSize: 15 }} value={email} onChangeText={setEmail} />
                 </View>
-                <View style={{ marginVertical: 20 }}>
-                    <Text style={{ fontFamily: "EBGaramond-Medium", fontSize: 18, marginLeft: 5, marginBottom: 2 }}>Password</Text>
+                <View style={{ marginVertical: 15 }}>
+                    <Text style={{ fontFamily: "Lexend-Regular", fontSize: 14, marginLeft: 5, marginBottom: 2 }}>Password</Text>
                     <TextInput placeholder="Password" placeholderTextColor={"#888888"} secureTextEntry={true} style={{ padding: 10, borderWidth: 1.5, borderRadius: 10, borderColor: '#101010', color: "#101010", fontFamily: "Lexend-Regular", fontSize: 15 }} value={password} onChangeText={setPassword} />
                 </View>
                 <View>
-                    <TouchableOpacity style={{ backgroundColor: loading ? "#555555" : "#101010", padding: 11, borderRadius: 10, alignItems: "center" }} onPress={handleLogin} disabled={loading} activeOpacity={0.7}>
+                    <TouchableOpacity style={{ backgroundColor: "#101010", padding: 11, borderRadius: 10, alignItems: "center", opacity: loading ? 0.8 : 1 }} onPress={handleLogin} disabled={loading} activeOpacity={0.8}>
                         <Text style={{ color: "#efeee9", fontFamily: "Lexend-Medium", fontSize: 16 }}>Login</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ alignItems: 'center', marginVertical: 10 }} onPress={() => { navigation.navigate("RegisterScreen") }}>

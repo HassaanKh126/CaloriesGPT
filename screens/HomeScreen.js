@@ -16,6 +16,7 @@ const HomeScreen = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [foods, setFoods] = useState([]);
+    const [userData, setUserData] = useState();
 
     const height = useSharedValue(0);
 
@@ -102,7 +103,7 @@ const HomeScreen = () => {
             }
 
             const data = await response.json();
-            setFoods(prev => [data.food_data, ...prev]);
+            setFoods(prev => [data.food, ...prev]);
         } catch (err) {
             console.error(err);
         } finally {
@@ -123,6 +124,7 @@ const HomeScreen = () => {
             });
             const data = await response.json();
             if (data.success === true) {
+                setUserData(data.user)
                 setFoods(data.foods)
             }
         } catch (error) {
@@ -151,14 +153,14 @@ const HomeScreen = () => {
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                         <Text style={{ fontFamily: 'Lexend-SemiBold', fontSize: 20 }}>CaloriesGPT</Text>
                     </View>
-                    <View style={{ backgroundColor: "#101010", height: 30, width: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
+                    <Pressable style={{ backgroundColor: "#101010", height: 30, width: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }} onPress={() => { navigation.navigate("UserScreen", { userData: userData }) }}>
                         <Text style={{ color: "#efeee9", fontFamily: 'Lexend-SemiBold', textAlign: 'center' }}>D</Text>
-                    </View>
+                    </Pressable>
                 </View>
                 <View style={{ flex: 1 }}>
                     <View style={{ backgroundColor: "#ffffff", paddingHorizontal: 20, paddingVertical: 20, borderRadius: 15 }}>
                         <Text style={{ fontFamily: "Lexend-Medium", fontSize: 12, color: "#888888" }}>Calories Left:</Text>
-                        <Text style={{ fontFamily: "Lexend-SemiBold", fontSize: 32, color: "#101010" }}>1000</Text>
+                        <Text style={{ fontFamily: "Lexend-SemiBold", fontSize: 32, color: "#101010" }}>{userData ? userData.calories_goal : 0}</Text>
                     </View>
                     <TouchableOpacity style={{ backgroundColor: "#101010", padding: 10, borderRadius: 10, marginTop: 10, alignItems: "center" }} onPress={toggleDropdown} activeOpacity={0.8}>
                         <Text style={{ fontFamily: "Lexend-Medium", color: "#efeee9", fontSize: 16 }}>Add Food</Text>

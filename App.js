@@ -8,6 +8,8 @@ import RegisterScreen from './screens/RegisterScreen';
 import Toast from 'react-native-toast-message';
 import { Text, View } from 'react-native';
 import FoodScreen from './screens/FoodScreen';
+import OnboardingScreen from './screens/OnboardingScreen';
+import UserScreen from './screens/UserScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,8 +21,10 @@ const App = () => {
                     <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ animation: 'fade' }} />
                     <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ animation: 'fade' }} />
                     <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{ animation: 'fade_from_bottom' }} />
+                    <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ animation: 'fade' }} />
                     <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ animation: 'fade' }} />
                     <Stack.Screen name="FoodScreen" component={FoodScreen} options={{ animation: 'fade' }} />
+                    <Stack.Screen name="UserScreen" component={UserScreen} options={{ animation: 'fade' }} />
                 </Stack.Navigator>
                 <Toast config={{
                     success: ({ text1, ...rest }) => (

@@ -45,7 +45,7 @@ const OnboardingScreen = () => {
       setLoading(true);
       try {
         const username = await AsyncStorage.getItem("caloriesgpt_username");
-        const response = await fetch(`${BURL}}/api/onboarding`, {
+        const response = await fetch(`${BURL}/api/onboarding`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

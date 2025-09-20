@@ -141,7 +141,7 @@ const HomeScreen = () => {
         getFood();
     }, []);
 
-    function truncate(str, maxLength) {
+    const truncate = (str, maxLength) => {
         return str.length > maxLength ? str.slice(0, maxLength) + "..." : str;
     }
 
@@ -153,14 +153,14 @@ const HomeScreen = () => {
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                         <Text style={{ fontFamily: 'Lexend-SemiBold', fontSize: 20 }}>CaloriesGPT</Text>
                     </View>
-                    <Pressable style={{ backgroundColor: "#101010", height: 30, width: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }} onPress={() => { navigation.navigate("UserScreen", { userData: userData }) }}>
+                    <Pressable style={{ backgroundColor: "#101010", height: 30, width: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }} onPress={() => { navigation.navigate("UserScreen", { userData: userData, foods: foods }) }}>
                         <Text style={{ color: "#efeee9", fontFamily: 'Lexend-SemiBold', textAlign: 'center' }}>D</Text>
                     </Pressable>
                 </View>
                 <View style={{ flex: 1 }}>
                     <View style={{ backgroundColor: "#ffffff", paddingHorizontal: 20, paddingVertical: 20, borderRadius: 15 }}>
-                        <Text style={{ fontFamily: "Lexend-Medium", fontSize: 12, color: "#888888" }}>Calories Left:</Text>
-                        <Text style={{ fontFamily: "Lexend-SemiBold", fontSize: 32, color: "#101010" }}>{userData ? userData.calories_goal : 0}</Text>
+                        <Text style={{ fontFamily: "Lexend-Medium", fontSize: 12, color: "#888888" }}>Calories Progress:</Text>
+                        <Text style={{ fontFamily: "Lexend-Medium", fontSize: 18, color: "#101010" }}><Text style={{ fontFamily: "Lexend-Medium", fontSize: 32 }}>{foods.filter(f => new Date(f.createdAt).toDateString() === new Date().toDateString()).reduce((sum, f) => sum + f.calories, 0)}</Text>/{userData ? userData.calories_goal : 0}</Text>
                     </View>
                     <TouchableOpacity style={{ backgroundColor: "#101010", padding: 10, borderRadius: 10, marginTop: 10, alignItems: "center" }} onPress={toggleDropdown} activeOpacity={0.8}>
                         <Text style={{ fontFamily: "Lexend-Medium", color: "#efeee9", fontSize: 16 }}>Add Food</Text>
@@ -174,8 +174,8 @@ const HomeScreen = () => {
                         </TouchableOpacity>
                     </Animated.View>
                     <Text style={{ fontFamily: "Lexend-SemiBold", fontSize: 18, color: "#101010", marginVertical: 10 }}>Eaten Today</Text>
-                    <ScrollView contentContainerStyle={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                        {foods.length > 0 ? foods.map((food, index) => {
+                    <ScrollView contentContainerStyle={{ display: 'flex', flexDirection: 'column', gap: 10 }} showsVerticalScrollIndicator={false}>
+                        {foods.filter(f => new Date(f.createdAt).toDateString() === new Date().toDateString()).length > 0 ? foods.filter(f => new Date(f.createdAt).toDateString() === new Date().toDateString()).map((food, index) => {
                             return (
                                 <Pressable key={index} style={{ backgroundColor: "#ffffff", borderRadius: 20, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} onPress={() => { navigation.navigate("FoodScreen", { food }) }}>
                                     <View style={{ height: 110, width: 110, backgroundColor: "#7c7c7c", borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }}>
@@ -195,6 +195,7 @@ const HomeScreen = () => {
                                 <Text style={{ textAlign: 'left', fontFamily: "Lexend-Regular", color: "#000000", fontSize: 16 }}>{`Nothing eaten yet... \nbut, you can change that.`}</Text>
                             </View>
                         )}
+                        <View style={{ height: 10 }}></View>
                     </ScrollView>
                 </View>
             </View>

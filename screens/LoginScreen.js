@@ -5,6 +5,7 @@ import { KeyboardAvoidingView, StatusBar, StyleSheet, Text, TextInput, Touchable
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { BURL } from "@env";
+import Purchases from "react-native-purchases";
 
 const LoginScreen = () => {
     const insets = useSafeAreaInsets();
@@ -60,11 +61,13 @@ const LoginScreen = () => {
             }
             if (data.success === true) {
                 await AsyncStorage.setItem("caloriesgpt_username", data.username);
+                await Purchases.logIn(`${data.username}_caloriesgpt_som_byte9962`);
                 Toast.show({
                     type: 'success',
                     text1: "Login Successful."
                 });
-                navigation.replace("HomeScreen");
+                // navigation.replace("HomeScreen");
+                navigation.replace("OnboardingScreen");
                 return;
             }
         } catch (error) {

@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, StatusBar } from "react-native";
-import Animated, {
-  FadeInRight,
-  FadeOutLeft,
-  FadeIn,
-  FadeOut,
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { FadeInRight, FadeOutLeft, FadeIn, FadeOut, useSharedValue, useAnimatedStyle, withTiming, withRepeat, Easing } from "react-native-reanimated";
 import NumberWheel from "../components/NumberWheel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
@@ -86,10 +78,27 @@ const OnboardingScreen = () => {
     opacity: buttonOpacity.value,
   }));
 
+  const rotation = useSharedValue(0);
+
+  useEffect(() => {
+    rotation.value = withRepeat(
+      withTiming(360, { duration: 1500, easing: Easing.linear }),
+      -1,
+      false
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    "worklet";
+    return {
+      transform: [{ rotate: `${rotation.value}deg` }],
+    };
+  });
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#101010" />
+        <Animated.View style={[styles.rectangle, animatedStyle]} />
         <Text style={styles.loadingText}>Customizing your experience…</Text>
       </View>
     );

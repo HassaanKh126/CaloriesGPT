@@ -53,8 +53,8 @@ const UserScreen = ({ route }) => {
     return (
         <View style={[styles.container, { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 10 }]}>
             <View style={styles.secondContainer}>
-                <View style={{ width: "100%", padding: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: "#101010", borderRadius: 15, marginBottom: 10, position: "relative", elevation: 3 }}>
-                    <View style={{ position: "absolute", top: 10, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '95%' }}>
+                <View style={{ width: "100%", padding: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: "#101010", borderRadius: 15, marginBottom: 10, position: "relative", elevation: 3, height: 170, maxHeight: 180 }}>
+                    <View style={{ position: "absolute", top: 10, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '95%', zIndex: 100 }}>
                         <TouchableOpacity onPress={() => { navigation.goBack() }}>
                             <Ionicons name="arrow-back" color={"#ffffff"} size={24} />
                         </TouchableOpacity>
@@ -62,7 +62,7 @@ const UserScreen = ({ route }) => {
                             <Feather name="settings" color={"#ffffff"} size={20} />
                         </TouchableOpacity>
                     </View>
-                    <Text style={{ fontFamily: "Lexend-SemiBold", color: "#ffffff", fontSize: 28, padding: 60 }}>{userData.username}</Text>
+                    <Text style={{ fontFamily: "Lexend-SemiBold", color: "#ffffff", fontSize: 28, padding: 40 }}>{userData.username}</Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: "row", gap: 10 }}>
                     <View style={{ backgroundColor: "#ffffff", flex: 1, padding: 15, borderRadius: 15, elevation: 3, alignItems: 'flex-start' }}>

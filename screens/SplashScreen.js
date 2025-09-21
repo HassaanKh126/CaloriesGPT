@@ -21,9 +21,9 @@ const SplashScreen = () => {
     useEffect(() => {
         const getToken = async () => {
             const token = await AsyncStorage.getItem("caloriesgpt_username");
+            const od = await AsyncStorage.getItem("OnboardingDone");
             setTimeout(async () => {
                 if (token) {
-                    const od = await AsyncStorage.getItem("OnboardingDone");
                     if (od && od === "true") {
                         navigation.replace("HomeScreen");
                     } else {

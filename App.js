@@ -12,10 +12,20 @@ import OnboardingScreen from './screens/OnboardingScreen';
 import UserScreen from './screens/UserScreen';
 import FoodsScreen from './screens/FoodsScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import Purchases from 'react-native-purchases';
+import { useEffect } from 'react';
+import SuccessScreen from './screens/SuccessScreen';
+import SubscribeScreen from './screens/SubscribeScreen';
+import { PURAPI } from '@env'
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+
+    useEffect(() => {
+        Purchases.configure({ apiKey: `${PURAPI}` })
+    }, [])
+
     return (
         <View style={{ flex: 1, backgroundColor: "#efeee9" }}>
             <NavigationContainer>
@@ -29,6 +39,8 @@ const App = () => {
                     <Stack.Screen name="UserScreen" component={UserScreen} options={{ animation: 'fade' }} />
                     <Stack.Screen name="FoodsScreen" component={FoodsScreen} options={{ animation: 'fade' }} />
                     <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={{ animation: 'fade' }} />
+                    <Stack.Screen name="SubscribeScreen" component={SubscribeScreen} options={{ animation: 'fade' }} />
+                    <Stack.Screen name="SuccessScreen" component={SuccessScreen} options={{ animation: 'fade' }} />
                 </Stack.Navigator>
                 <Toast config={{
                     success: ({ text1, ...rest }) => (

@@ -6,6 +6,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { BURL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+import Purchases from "react-native-purchases";
 
 const SettingsScreen = ({ route }) => {
     const { userData } = route.params;
@@ -105,6 +106,7 @@ const SettingsScreen = ({ route }) => {
     const handleLogout = async () => {
         await AsyncStorage.removeItem("caloriesgpt_username");
         await AsyncStorage.removeItem("OnboardingDone");
+        Purchases.logOut()
         setTimeout(() => {
             Toast.show({
                 type: "success",

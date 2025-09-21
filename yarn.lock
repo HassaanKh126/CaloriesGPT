@@ -5562,6 +5562,11 @@ react-is@^19.1.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.1.1.tgz#038ebe313cf18e1fd1235d51c87360eb87f7c36a"
   integrity sha512-tr41fA15Vn8p4X9ntI+yCyeGSf1TlYaY5vlTZfQmeLBrFo3psOPX6HhTDnFNL9uj3EhP0KAQ80cugCl4b4BERA==
 
+react-native-confetti@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-confetti/-/react-native-confetti-0.1.0.tgz#9ec93c07f845de5ebeaed700043fd5218792b6f1"
+  integrity sha512-+cXJvnPXKc0i/eTQcuzcjrlfIxmn/xFw4UyuVKQOWNK6BfWABvO6Ms6Zp6ivF1E8Vxt2vJkzJlNyoBvMh9FxKA==
+
 react-native-dotenv@^3.4.11:
   version "3.4.11"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.11.tgz#2e6c4eabd55d5f1bf109b3dd9141dadf9c55cdd4"
@@ -5587,6 +5592,13 @@ react-native-is-edge-to-edge@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.2.1.tgz#64e10851abd9d176cbf2b40562f751622bde3358"
   integrity sha512-FLbPWl/MyYQWz+KwqOZsSyj2JmLKglHatd3xLZWskXOpRaio4LfEDEz8E/A6uD8QoTHW6Aobw1jbEwK7KMgR7Q==
+
+react-native-purchases-ui@^9.5.0:
+  version "9.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-purchases-ui/-/react-native-purchases-ui-9.5.0.tgz#9b1c0a44c201c540a28deddbbbfaabb11df56c16"
+  integrity sha512-SvvEePQcX8gVHrzkliWUpKQK1eQU+lcppSjUOZMUlShEFHiH7fbCvuZaMK15OWHSeiSR9TA29lGXN4N3B74gGw==
+  dependencies:
+    "@revenuecat/purchases-typescript-internal" "17.7.0"
 
 react-native-purchases@^9.5.0:
   version "9.5.0"

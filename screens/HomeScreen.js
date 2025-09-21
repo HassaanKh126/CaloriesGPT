@@ -7,7 +7,9 @@ import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import LoaderOverlay from "../components/Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { BURL } from "@env";
+import Purchases from "react-native-purchases";
 
 const HomeScreen = () => {
     const insets = useSafeAreaInsets();
@@ -17,16 +19,40 @@ const HomeScreen = () => {
     const [loading, setLoading] = useState(false);
     const [foods, setFoods] = useState([]);
     const [userData, setUserData] = useState();
-
     const height = useSharedValue(0);
+    const [subscriptionStatus, setSubscriptionStatus] = useState("FREE");
+
+    useEffect(() => {
+        getSubscriptionStatus()
+    }, []);
+
+    const getSubscriptionStatus = async () => {
+        const customerinfo = await Purchases.getCustomerInfo();
+        if (customerinfo.entitlements.active.pro?.isActive) {
+            setSubscriptionStatus("PRO");
+        } else {
+            setSubscriptionStatus("FREE");
+        }
+
+    }
 
     const toggleDropdown = () => {
-        if (open) {
-            height.value = withTiming(0, { duration: 300 });
-        } else {
-            height.value = withTiming(100, { duration: 300 });
+        if (subscriptionStatus === "FREE") {
+            if (foods.length < 3) {
+                if (open) {
+                    height.value = withTiming(0, { duration: 300 });
+                } else {
+                    height.value = withTiming(100, { duration: 300 });
+                }
+                setOpen(!open);
+            } else {
+                Toast.show({
+                    type: 'info',
+                    text1: `Your free trial has ended.\nSubscribe to get unlimited meal logs.`
+                });
+                navigation.navigate("SubscribeScreen");
+            }
         }
-        setOpen(!open);
     };
 
     const animatedStyle = useAnimatedStyle(() => {
@@ -43,6 +69,9 @@ const HomeScreen = () => {
                 mediaType: "photo",
                 cameraType: "back",
                 saveToPhotos: true,
+                maxWidth: 1024,
+                maxHeight: 1024,
+                quality: 0.7,
             },
             (response) => {
                 if (response.didCancel) {
@@ -63,6 +92,9 @@ const HomeScreen = () => {
             {
                 mediaType: "photo",
                 selectionLimit: 1,
+                maxWidth: 1024,
+                maxHeight: 1024,
+                quality: 0.7,
             },
             (response) => {
                 if (response.didCancel) {
@@ -80,21 +112,21 @@ const HomeScreen = () => {
 
     const processImage = async (uri) => {
         setLoading(true);
+
         try {
-            const username = await AsyncStorage.getItem("caloriesgpt_username")
+            const username = await AsyncStorage.getItem("caloriesgpt_username");
+
             const formData = new FormData();
             formData.append("username", username);
             formData.append("image", {
                 uri: uri,
                 type: "image/jpeg",
-                name: "image.jpg",
+                name: `image_${Date.now()}.jpg`,
             });
 
             const response = await fetch(`${BURL}/api/analyze-image`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
+                headers: { "Content-Type": "multipart/form-data" },
                 body: formData,
             });
 
@@ -102,11 +134,48 @@ const HomeScreen = () => {
                 throw new Error(`Server error: ${response.status}`);
             }
 
-            const data = await response.json();
-            setFoods(prev => [data.food, ...prev]);
+            const result = await response.json();
+
+            if (result.message === "Food analysis started, check back later.") {
+                const pollInterval = 2000;
+                const maxAttempts = 15;
+                let attempts = 0;
+
+                const pollForFood = async () => {
+                    attempts++;
+                    const res = await fetch(`${BURL}/api/get-food`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ username }),
+                    });
+                    const data = await res.json();
+
+                    if (data.success && data.foods.length === foods.length + 1) {
+                        const latestFood = data.foods[0];
+
+                        if (latestFood.food_img_url.includes("image")) {
+                            setFoods(prev => [latestFood, ...prev]);
+                            setLoading(false);
+                            return;
+                        }
+                    }
+
+                    if (attempts < maxAttempts) {
+                        setTimeout(pollForFood, pollInterval);
+                    } else {
+                        console.warn("Food analysis timed out");
+                        setLoading(false);
+                    }
+                };
+
+                pollForFood();
+            } else {
+                console.error("Upload failed or backend rejected request:", result);
+                setLoading(false);
+            }
+
         } catch (err) {
             console.error(err);
-        } finally {
             setLoading(false);
         }
     };
@@ -153,9 +222,17 @@ const HomeScreen = () => {
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                         <Text style={{ fontFamily: 'Lexend-SemiBold', fontSize: 20 }}>CaloriesGPT</Text>
                     </View>
-                    <Pressable style={{ backgroundColor: "#101010", height: 30, width: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }} onPress={() => { navigation.navigate("UserScreen", { userData: userData, foods: foods }) }}>
-                        <Text style={{ color: "#efeee9", fontFamily: 'Lexend-SemiBold', textAlign: 'center' }}>D</Text>
-                    </Pressable>
+                    <View style={{ flexDirection: "row", alignItems: 'center', gap: 5 }}>
+                        {subscriptionStatus === "FREE" && (
+                            <Pressable style={{ display: 'flex', flexDirection: "row", alignItems: 'center', gap: 5, backgroundColor: "#101010", padding: 7, borderRadius: 10 }} onPress={() => { navigation.navigate("SubscribeScreen") }}>
+                                <Text style={{ fontFamily: "Lexend-Regular", color: "#efeee9", fontSize: 12 }}>SUBSCRIBE</Text>
+                                <FontAwesome6 name="crown" size={15} color={"#efeee9"} />
+                            </Pressable>
+                        )}
+                        <Pressable style={{ backgroundColor: "#101010", height: 30, width: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }} onPress={() => { navigation.navigate("UserScreen", { userData: userData, foods: foods }) }}>
+                            <Text style={{ color: "#efeee9", fontFamily: 'Lexend-SemiBold', textAlign: 'center' }}>D</Text>
+                        </Pressable>
+                    </View>
                 </View>
                 <View style={{ flex: 1 }}>
                     <View style={{ backgroundColor: "#ffffff", paddingHorizontal: 20, paddingVertical: 20, borderRadius: 15 }}>

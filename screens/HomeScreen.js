@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -229,9 +229,11 @@ const HomeScreen = () => {
                                 <FontAwesome6 name="crown" size={15} color={"#efeee9"} />
                             </Pressable>
                         )}
-                        <Pressable style={{ backgroundColor: "#101010", height: 30, width: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }} onPress={() => { navigation.navigate("UserScreen", { userData: userData, foods: foods }) }}>
-                            <Text style={{ color: "#efeee9", fontFamily: 'Lexend-SemiBold', textAlign: 'center' }}>D</Text>
-                        </Pressable>
+                        {userData && (
+                            <Pressable style={{ backgroundColor: "#101010", height: 30, width: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }} onPress={() => { navigation.navigate("UserScreen", { userData: userData, foods: foods }) }}>
+                                <Text style={{ color: "#efeee9", fontFamily: 'Lexend-SemiBold', textAlign: 'center' }}>{userData && userData.username[0].toUpperCase()}</Text>
+                            </Pressable>
+                        )}
                     </View>
                 </View>
                 <View style={{ flex: 1 }}>

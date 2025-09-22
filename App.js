@@ -16,14 +16,13 @@ import Purchases from 'react-native-purchases';
 import { useEffect } from 'react';
 import SuccessScreen from './screens/SuccessScreen';
 import SubscribeScreen from './screens/SubscribeScreen';
-import { PURAPI } from '@env'
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
 
     useEffect(() => {
-        Purchases.configure({ apiKey: `${PURAPI}` })
+        Purchases.configure({ apiKey: SECRETKEY });
     }, [])
 
     return (

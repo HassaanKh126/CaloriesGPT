@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, StatusBar } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from "react-native";
 import Animated, { FadeInRight, FadeOutLeft, FadeIn, FadeOut, useSharedValue, useAnimatedStyle, withTiming, withRepeat, Easing } from "react-native-reanimated";
 import NumberWheel from "../components/NumberWheel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -307,6 +307,7 @@ const styles = StyleSheet.create({
   toggleTextSelected: { color: "#efeee9" },
   loadingContainer: { flex: 1, backgroundColor: "#efeee9", justifyContent: "center", alignItems: "center" },
   loadingText: { marginTop: 20, fontSize: 18, color: "#101010", fontFamily: "Lexend-Medium" },
+  rectangle: { width: 40, height: 20, backgroundColor: "#101010", borderRadius: 4 }
 });
 
 export default OnboardingScreen;
